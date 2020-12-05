@@ -50,12 +50,13 @@ public class ReadXml {
 
         Node node1 = document.getElementsByTagName("FILE_ID").item(0);
         System.out.printf("{\n\"FILE_ID\": \"%s\"," , node1.getTextContent());
-        System.out.printf("\n\"HEADER\":{ " , node1.getTextContent());
+
 
         // на случай нескольких HEADER, мало ли какой шаблон
         NodeList headerList = document.getElementsByTagName("HEADER");
         for (int i = 0; i < headerList.getLength(); i++) {
             //на 1 HEADER
+            System.out.printf("\n\"HEADER\":{ " , node1.getTextContent());
             NodeList childList = headerList.item(i).getChildNodes();
             for (int j = 0; j < childList.getLength(); j++) {
                 // внутри одного HEADER. childNode == один параметр в тэге
@@ -76,11 +77,12 @@ public class ReadXml {
 
         // без бутылки не разберешься
         NodeList detailsList = document.getElementsByTagName("DETAILS");
-        System.out.printf("\n\"DETAILS\":[");
+
         // для нескольких DETAILS
         for (int i = 0; i < detailsList.getLength(); i++) {
             NodeList detailList = detailsList.item(i).getChildNodes();
             // итерация нескольких DETAIL
+            System.out.printf("\n\"DETAILS\":[");
             for (int j = 0; j < detailList.getLength(); j++) {
                 Node oneDetailsNode = detailList.item(j);
 
@@ -96,13 +98,21 @@ public class ReadXml {
 
                         if (detailNodes.item(n).getNodeType() == Node.ELEMENT_NODE){
                             if(detailAtribute == detailNodes.item(detailNodes.getLength() - 2)){
-                                if(j == detailList.getLength() - 2){
-                                    System.out.printf("\n\"%s\": \"%s\" \n}\n}\n] ",   detailAtribute.getNodeName().trim(),  detailAtribute.getTextContent());
+                                if(j == detailList.getLength() - 2 ) {
+                                    if(i == detailsList.getLength()-1){
+                                        // если последний элемент вообще
+                                        System.out.printf("\n\"%s\": \"%s\" \n}\n]\n} ",   detailAtribute.getNodeName().trim(),  detailAtribute.getTextContent());
+                                        continue;
+                                    }
+                                    // если есть еще DETAILS
+                                    System.out.printf("\n\"%s\": \"%s\" \n}\n], ",   detailAtribute.getNodeName().trim(),  detailAtribute.getTextContent());
                                     continue;
                                 }
+                                //если последний элемент в DETAIL
                                 System.out.printf("\n\"%s\": \"%s\" \n}, ",   detailAtribute.getNodeName().trim(),  detailAtribute.getTextContent());
                                 continue;
                             }
+                            //вывод основных элементов
                             System.out.printf("\n\"%s\": \"%s\", ",   detailAtribute.getNodeName().trim(),  detailAtribute.getTextContent());
                         }
 
