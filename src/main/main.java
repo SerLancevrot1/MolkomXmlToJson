@@ -3,7 +3,10 @@ package main;
 public class main {
     public static void main(String[] args) {
 
-        ReadXml readXml = new ReadXml();
-        readXml.parseXml();
+        JsonToFile jsonToFile = new JsonToFile();
+        StringBuilder stringBuilder = jsonToFile.parseXml();
+
+        Sb sb = new Sb();
+        sb.showSb(stringBuilder);
     }
 }
